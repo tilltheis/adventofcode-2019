@@ -1,10 +1,18 @@
 import Data.List.Split (splitOn)
 import qualified Data.Set as Set
+import Data.List (elemIndex)
+import qualified Data.Maybe as Maybe
 
-answer1 = minimum $ map distance $ filter ((0, 0) /=) overlaps
-  where overlaps = overlappingCoords wire1Coords wire2Coords
+answer1 = minimum $ map distance $ overlaps
+  where overlaps = filter ((0, 0) /=) $ overlappingCoords wire1Coords wire2Coords
         wire1Coords = wirePathToCoords $ wireStringToPath wire1String
         wire2Coords = wirePathToCoords $ wireStringToPath wire2String
+
+answer2 = minimum $ map distance $ indexes
+  where indexes = map (\x -> (Maybe.fromJust $ elemIndex x wire1Coords, Maybe.fromJust $ elemIndex x wire2Coords)) overlaps
+        overlaps = filter ((0, 0) /=) $ overlappingCoords wire1Coords wire2Coords
+        wire1Coords = reverse $ wirePathToCoords $ wireStringToPath wire1String
+        wire2Coords = reverse $ wirePathToCoords $ wireStringToPath wire2String
 
 distance (x, y) = (abs x) + (abs y)
 
